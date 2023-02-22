@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Create Additional</title>
+<style>
+.topright {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 18px;
+}
+
+.right {
+  position: absolute;
+  top: 120px;
+  right: 30px;
+  font-size: 18px;
+}
+
+.left {
+  position: absolute;
+  top: 120px;
+  left: 30px;
+  font-size: 18px;
+}
+.center{
+  position: absolute;
+   left: 600px;
+  top: 120px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<div class="topright">
+		<h3 th:text="${session.employee.getUsername()}"></h3>
+		<a  th:href="@{/GoToCreatePackage}">Create Package</a> 
+		
+		<a th:href="@{/Logout}">Logout</a><br>
+		
+	</div>
+	<div class="center" align="center">
+	<h3>Create Service</h3>	
+	<label>Type: </label>
+	<select id="select" name="select">
+		<option value="-1" selected>Selecte a type</option>
+		<option value="mp">Mobile Phone</option>
+		<option value="mi">Mobile Internet</option>
+		<option value="tp">Telephone Phone</option>
+		<option value="ti" >Telephone Internet</option>
+	</select> 	
+	<script>
+		document.getElementById("select").onchange = function(){
+			if(document.getElementById("select").value=="mp"){
+		  		document.getElementById("mp").hidden=false;
+		  		document.getElementById("mi").hidden=true;
+		  		document.getElementById("tp").hidden=true;
+		  		document.getElementById("ti").hidden=true;
+
+			}
+			if(document.getElementById("select").value=="mi"){
+		  		document.getElementById("mp").hidden=true;
+		  		document.getElementById("mi").hidden=false;
+		  		document.getElementById("tp").hidden=true;
+		  		document.getElementById("ti").hidden=true;
+
+			}
+			if(document.getElementById("select").value=="tp"){
+		  		document.getElementById("mp").hidden=true;
+		  		document.getElementById("mi").hidden=true;
+		  		document.getElementById("tp").hidden=false;
+		  		document.getElementById("ti").hidden=true;
+
+			}
+			if(document.getElementById("select").value=="ti"){
+		  		document.getElementById("mp").hidden=true;
+		  		document.getElementById("mi").hidden=true;
+		  		document.getElementById("tp").hidden=true;
+		  		document.getElementById("ti").hidden=false;
+
+			}
+		}
+	</script>	
+	<form id="mp" action="CreateService" method="POST" hidden=true >
+		<input type="hidden" name="type" value="mp">
+		<label>Minutes</label><input type="text" name="minutes" required><br>
+		<label>Fee Extra Minutes</label><input type="text" name="feeMin" required><br>
+		<label>sms</label><input type="text" name="sms" required><br>
+		<label>fee extra sms</label><input type="text" name="feeSms" required><br>
+		<input type="submit" value="create">
+	</form>	
+	<form id="mi" action="CreateService" method="POST" hidden=true>
+		<input type="hidden" name="type" value="mi">
+		<label>giga</label><input type="text" name="giga" required><br>
+		<label>Fee Extra giga</label><input type="text" name="feeGiga" required><br>
+		<input type="submit" value="create">
+	</form>	
+	<form id="ti" action="CreateService" method="POST" hidden=true>
+		<input type="hidden" name="type" value="ti">
+		<label>giga</label><input type="text" name="giga" required><br>
+		<label>Fee Extra giga</label><input type="text" name="feeGiga" required><br>
+		<input type="submit" value="create">
+	</form>	
+	<form id="tp" action="CreateService" method="POST" hidden=true>
+		<input type="hidden" name="type" value="tp">
+		<input type="submit" value="create">
+	</form>	
+	<p th:text=" ${errorMsg}"></p>
+	
+	</div>	
+	<div class="right">
+	<h3>Create Validity</h3>		
+	<form action="CreateValidity" method="POST">
+		<label>Months:</label><br>	
+		<input	type="radio" th:value="12" name="month" checked><label>12</label><br>
+		<input	type="radio" th:value="24" name="month"><label>24</label><br>
+		<input	type="radio" th:value="36" name="month"><label>36</label><br>
+		<label>Monthly Fee</label><input type="text" name="monthlyFee" required><br>
+		<input type="submit" value="create">
+	</form>	
+	<p th:text=" ${errorValidityMsg}"></p>
+	
+	</div>	
+	<div class="left">
+	<h3>Create Optional Product</h3>		
+	<form action="CreateProduct" method="POST">
+		<label>Name</label><input type="text" name="name" required><br>
+		<label>Monthly Fee</label><input type="text" name="monthlyFee" required><br>
+		<input type="submit" value="create">
+	</form>	
+	<p th:text=" ${errorProductMsg}"></p>
+	</div>		
+</body>
+</html>

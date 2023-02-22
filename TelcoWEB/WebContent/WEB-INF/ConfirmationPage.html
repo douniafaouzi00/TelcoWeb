@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Confirmation Page</title>
+<style>
+.topright {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<div class="topright">	
+		<div th:if="${session.user!=null}">
+			<h3 th:text="${session.user.getUsername()}"></h3>
+			<a th:href="@{/Logout}">Logout</a>
+		</div> 
+		<a th:href="@{/GoToHomePage}">Home Page</a>
+		
+	</div>
+	
+	<div align="center">
+		<h3 th:text="${session.package.getName()}"></h3>
+		<p>Services: </p>
+		<table>
+		<tr th:each="s:${session.package.getServices()}">
+			<td th:if="${s.type=='mp'}">Mobile Phone: </td>
+			<td th:if="${s.type=='mi'}">Mobile Internet: </td>
+			<td th:if="${s.type=='ti'}"> Telephone Internet: </td>
+			<td th:if="${s.type=='tp'}">Telephone Phone: </td>
+			<td th:if="${s.type=='mp'}">
+			<ul>
+				<li th:text="${'minutes: ' + s.getMP().getMinutes()}"></li>
+				<li th:text="${'fee extra minutes: ' + s.getMP().getFee_minutes()}"></li>
+				<li th:text="${'sms: ' + s.getMP().getSms()}"></li>
+				<li th:text="${'fee extra minutes: ' + s.getMP().getFee_sms()}"></li>
+			</ul>
+			</td>
+			<td th:if="${s.type=='mi'}" >
+			<ul>
+				<li th:text="${'giga: ' + s.getMI().getGiga()}"></li>
+				<li th:text="${'fee extra giga: ' + s.getMI().getGiga_fee()}"></li>
+			</ul>
+			</td>
+			<td th:if="${s.type=='ti'}">
+			<ul>
+				<li th:text="${'giga: ' + s.getTI().getGiga()}"></li>
+				<li th:text="${'fee extra giga: ' + s.getTI().getGiga_fee()}"></li>
+			</ul>
+			</td>
+		</tr>
+		</table>
+	
+		<p>Optional Products: </p>
+		<div th:each="op:${session.products}">
+			<p>
+				<b>Name: </b> <label th:text="${op.getName()}"></label> <br>
+				<b>Monthly Fee: </b> <label th:text="${op.getMonthly_fee()}"></label>			</p>
+		</div>
+		
+		<p>Validities: </p>
+		<div th:each="v:${session.validity}">
+			<b>Month: </b> <label th:text="${v.getMonth()}"></label>
+			<b>Monthly Fee: </b> <label th:text="${v.getMonthly_fee()}"></label>		
+		</div>
+	
+		<div th:if="${session.user==null}">
+			<a href="/TelcoWEB/index.html">Login</a>
+			<a href="/TelcoWEB/Registration.html">Registration</a>
+		</div>
+		
+		<form action="Buy" method="POST" th:if="${session.user!=null}">
+			<input type="hidden" name="order" th:if="${order!=null}" th:value="${order.getId()}">
+			<input type="hidden" name="package" th:value="${session.package.getId()}">
+			<input type="hidden" name="validity" th:value="${session.validity.getId()}">
+			<input type="hidden" name="products" th:each="op:${session.products}" th:value="${op.getId()}">
+			<label>Start Date</label><input type="date" name="start_date" th:value="${#dates.format(start_date, 'yyyy-MM-dd')}" required> <br> 
+			<label>Valid</label><input type="radio" name="status" value="valid" > <br>
+			<label>Reject</label><input type="radio" name="status" value="rejected" checked> <br> 			
+			<input type="submit" value="BUY">		
+		</form>
+		<form action="DeleteOrder" method="POST" th:if="${session.user!=null & order!=null}">
+			<input type="hidden" name="order" th:if="${order!=null}" th:value="${order.getId()}">
+		
+			<input type="submit" value="DELETE">
+		</form>
+		<p th:text=" ${errorMsg}"></p> <br>
+		
+	</div>
+</body>
+</html>

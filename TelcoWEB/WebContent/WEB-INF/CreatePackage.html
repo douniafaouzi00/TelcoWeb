@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Create Package</title>
+<style>
+.topright {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  font-size: 18px;
+}
+
+.right {
+  position: absolute;
+  top: 120px;
+  right: 30px;
+  font-size: 18px;
+}
+
+.left {
+  position: absolute;
+  top: 120px;
+  left: 30px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<div class="topright">
+		<h3 th:text="${session.employee.getUsername()}"></h3>
+		<a th:href="@{/Logout}">Logout</a><br>
+		<a  th:href="@{/GoToEmployeeHomePage}">Home Page</a> 
+		
+		
+	</div>
+	<div align="center">
+		<h3>Create Your Package</h3>
+		<a  th:href="@{/GoToCreateAdditional}">Create new Services, Optional Products or Validities</a> 
+		<h3></h3>
+		<form action="CreatePackage" method="POST">
+			<label>Name: </label>	<input type="text" name="name" required><br>
+			<input type="submit" value="CONFIRM">
+			<p th:text=" ${errorMsg}"></p>
+		
+			<div align="center">
+			<p>Services:</p>
+				<table>
+					<tr th:each="s:${services}">
+					<td th:if="${s.type=='mp'}">Mobile Phone:</td>
+					<td th:if="${s.type=='mp'}">
+					<ul>
+						<li th:text="${'minutes: ' + s.getMP().getMinutes()}"></li>
+						<li
+							th:text="${'fee extra minutes: ' + s.getMP().getFee_minutes()}"></li>
+						<li th:text="${'sms: ' + s.getMP().getSms()}"></li>
+						<li th:text="${'fee extra minutes: ' + s.getMP().getFee_sms()}"></li>
+					</ul>
+					</td>
+					<td th:if="${s.type=='mi'}">Mobile Internet:</td>
+					<td th:if="${s.type=='mi'}">
+					<ul >
+						<li th:text="${'giga: ' + s.getMI().getGiga()}"></li>
+						<li th:text="${'fee extra giga: ' + s.getMI().getGiga_fee()}"></li>
+					</ul>
+					</td>	
+					<td th:if="${s.type=='ti'}">Telephone Internet:</td>
+					
+					<td th:if="${s.type=='ti'}">
+					<ul >
+						<li th:text="${'giga: ' + s.getTI().getGiga()}"></li>
+						<li th:text="${'fee extra giga: ' + s.getTI().getGiga_fee()}"></li>
+					</ul>
+					</td>
+					<td th:if="${s.type=='tp'}">Telephone Phone</td><td th:if="${s.type=='tp'}"></td>
+					<td><input type="checkbox" th:value="${s.getId()}" name="services"></td>
+					</tr>
+				</table>
+		</div>
+		<div class="left" >
+			<p>Optional Products:</p>
+			<div th:each="op:${products}">
+				<p>
+					<b>Name: </b> <label th:text="${op.getName()}"></label> <br> <b>Monthly
+						Fee: </b> <label th:text="${op.getMonthly_fee()}"></label> 
+						<input type="checkBox" th:value="${op.getId()}" name="products">
+				</p>
+			</div>
+		</div>
+		<div class="right">
+			<p>Validities:</p>
+			<div th:each="v:${validities}">
+				<b>Month: </b> <label th:text="${v.getMonth()}"></label> 
+				<b>Monthly Fee: </b> <label th:text="${v.getMonthly_fee()}"></label> 
+				<input type="checkBox" th:value="${v.getId()}" name="validities">
+			</div>
+		</div>
+		</form>
+	</div>
+	<div align="center" th:if="${package!=null}">
+		<h3></h3>
+		<p th:text=" ${correctMsg}"></p>
+		<h4 th:text="${package.getName()}"></h4>
+			<p>Services:</p>
+			<table>
+				<tr th:each="s:${package.services}">
+					<td th:if="${s.type=='mp'}">Mobile Phone:</td>
+					<td th:if="${s.type=='mi'}">Mobile Internet:</td>
+					<td th:if="${s.type=='ti'}">Telephone Internet:</td>
+					<td th:if="${s.type=='tp'}">Telephone Phone:</td>
+					<td th:if="${s.type=='mp'}">
+						<ul>
+							<li th:text="${'minutes: ' + s.getMP().getMinutes()}"></li>
+							<li
+								th:text="${'fee extra minutes: ' + s.getMP().getFee_minutes()}"></li>
+							<li th:text="${'sms: ' + s.getMP().getSms()}"></li>
+							<li th:text="${'fee extra minutes: ' + s.getMP().getFee_sms()}"></li>
+						</ul>
+					</td>
+					<td th:if="${s.type=='mi'}">
+						<ul>
+							<li th:text="${'giga: ' + s.getMI().getGiga()}"></li>
+							<li th:text="${'fee extra giga: ' + s.getMI().getGiga_fee()}"></li>
+						</ul>
+					</td>
+					<td th:if="${s.type=='ti'}">
+						<ul>
+							<li th:text="${'giga: ' + s.getTI().getGiga()}"></li>
+							<li th:text="${'fee extra giga: ' + s.getTI().getGiga_fee()}"></li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+
+			<p>Optional Products:</p>
+			<div th:each="op:${package.products}">
+				<p>
+					<b>Name: </b> <label th:text="${op.getName()}"></label> <br> <b>Monthly
+						Fee: </b> <label th:text="${op.getMonthly_fee()}"></label> 
+				</p>
+			</div>
+
+			<p>Validities:</p>
+			<div th:each="v:${package.validities}">
+				<b>Month: </b> <label th:text="${v.getMonth()}"></label> <b>Monthly
+					Fee: </b> <label th:text="${v.getMonthly_fee()}"></label> 
+			</div>
+	</div>
+</body>
+</html>

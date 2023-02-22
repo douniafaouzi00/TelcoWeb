@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Buy Package</title>
+<style>
+.topright {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<h1 align="center">Welcome to telco services</h1>
+	<div class="topright">
+		<div th:if="${session.user==null}">
+			<a href="/TelcoWEB/index.html">Login</a> <a
+				href="/TelcoWEB/Registration.html">Registration</a>
+		</div>
+		<div th:if="${session.user!=null}">
+			<h3 th:text="${session.user.getUsername()}"></h3>
+			<a th:href="@{/Logout}">Logout</a>
+		</div>
+	</div>
+	<div align="center">
+		<form action="AddDetails" method="POST">
+			<select id="select" name="select">
+				<option th:each="p: ${packages}" th:value="${p.getId()}"
+					th:text="${p.name}" selected></option>
+			</select> <input type="submit" value="find">
+		</form>
+		<form action="GoToConfirmationPage" method="POST" th:if="${package!=null}">
+			<input type="hidden" name="package" th:value="${package.getId()}">
+			<h4 th:text="${package.getName()}"></h4>
+			<p>Services:</p>
+			<table>
+				<tr th:each="s:${services}">
+					<td th:if="${s.type=='mp'}">Mobile Phone:</td>
+					<td th:if="${s.type=='mi'}">Mobile Internet:</td>
+					<td th:if="${s.type=='ti'}">Telephone Internet:</td>
+					<td th:if="${s.type=='tp'}">Telephone Phone:</td>
+					<td th:if="${s.type=='mp'}">
+						<ul>
+							<li th:text="${'minutes: ' + s.getMP().getMinutes()}"></li>
+							<li
+								th:text="${'fee extra minutes: ' + s.getMP().getFee_minutes()}"></li>
+							<li th:text="${'sms: ' + s.getMP().getSms()}"></li>
+							<li th:text="${'fee extra minutes: ' + s.getMP().getFee_sms()}"></li>
+						</ul>
+					</td>
+					<td th:if="${s.type=='mi'}">
+						<ul>
+							<li th:text="${'giga: ' + s.getMI().getGiga()}"></li>
+							<li th:text="${'fee extra giga: ' + s.getMI().getGiga_fee()}"></li>
+						</ul>
+					</td>
+					<td th:if="${s.type=='ti'}">
+						<ul>
+							<li th:text="${'giga: ' + s.getTI().getGiga()}"></li>
+							<li th:text="${'fee extra giga: ' + s.getTI().getGiga_fee()}"></li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+
+			<p>Optional Products:</p>
+			<div th:each="op:${products}">
+				<p>
+					<b>Name: </b> <label th:text="${op.getName()}"></label> <br> <b>Monthly
+						Fee: </b> <label th:text="${op.getMonthly_fee()}"></label> <input
+						type="checkBox" th:value="${op.getId()}" name="checkBox">
+				</p>
+			</div>
+
+			<p>Validities:</p>
+			<div th:each="v:${validities}">
+				<b>Month: </b> <label th:text="${v.getMonth()}"></label> <b>Monthly
+					Fee: </b> <label th:text="${v.getMonthly_fee()}"></label> 
+				<input	type="radio" th:value="${v.getId()}" name="radio" checked>
+			</div>
+
+			<input type="submit" value="CONFIRM">
+		</form>
+	</div>
+</body>
+</html>

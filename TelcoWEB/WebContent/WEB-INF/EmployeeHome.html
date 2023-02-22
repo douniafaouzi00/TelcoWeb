@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Home</title>
+<style>
+.topright {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<h1 align="center">Welcome to telco services</h1>
+	<div class="topright">	
+		<h3 th:text="${session.employee.getUsername()}"></h3>
+		<a th:href="@{/GoToCreatePackage}">CREATE PACKAGE</a> <br>
+		<a th:href="@{/Logout}">Logout</a>
+	</div>
+	<div align="center">
+		<h2>Sales Report</h2>		
+		<h4>Purchase per Package: </h4>
+		<table>
+		<tr><th>Package Name</th><th>Tot Purchase</th></tr>
+		<tr th:each="p:${purchase_package}">
+			<td th:text="${p.name}"></td>
+			<td th:text="${p.tot_purchase}"></td>
+		</tr>
+		</table>
+		
+		<h4>Purchase per Package and Validity: </h4>
+		<table>
+		<tr><th>Package Name</th> <th>Validity Months</th><th>Tot Purchase</th></tr>
+		<tr th:each="p:${purchase_package_validity}">
+			<td th:text="${p.name}"></td>
+			<td th:text="${p.month}"></td>
+			<td th:text="${p.tot_purchase}"></td>
+		</tr>
+		</table>
+		
+		<h4>Average number of optional product bought with a package: </h4>
+		<table>
+		<tr><th>Package Name</th> <th>Average</th></tr>
+		<tr th:each="p:${average_product}">
+			<td th:text="${p.name}"></td>
+			<td th:text="${p.average_product}"></td>
+		</tr>
+		</table>
+		
+		<h4>Total sales: </h4>
+		<table>
+		<tr><th>Package Name</th> <th>Total Sales with Optional Product</th><th>Total Sales without Optional Product</th></tr>
+		<tr th:each="p:${totsales}">
+			<td th:text="${p.name}"></td>
+			<td th:text="${p.totsales_with}"></td>
+			<td th:text="${p.totsales_without}"></td>
+		</tr>
+		</table>
+		
+		<h4>Best Optional Product: </h4>
+		<table>
+		<tr><th>Product Name</th> <th>Total Sales</th></tr>
+		<tr th:each="p:${best_seller}">
+			<td th:text="${p.name}"></td>
+			<td th:text="${p.tot_sales}"></td>
+		</tr>
+		</table>
+		
+		<h4>Alert: </h4>
+		<table>
+		<tr><th>UserId</th> <th>Username</th> <th>Email</th> <th>Amount</th> <th>Date Last Rejection</th> <th>Time Last Rejection</th></tr>
+		<tr th:each="a:${alerts}">
+			<td th:text="${a.getId.getId()}"></td>
+			<td th:text="${a.username}"></td>
+			<td th:text="${a.email}"></td>
+			<td th:text="${a.amount}"></td>
+			<td th:text="${#dates.format(a.date, 'dd-MM-yyyy')}" ></td>
+			<td th:text="${a.time}"></td>		
+		</tr>
+		</table>
+		
+		
+		<h4>Insolvent User: </h4>
+		<table>
+		<tr><th>Username</th> <th>Email</th></tr>
+		<tr th:each="i:${insolvent_user}">
+			<td th:text="${i.username}"></td>
+			<td th:text="${i.email}"></td>
+		</tr>
+		</table>
+		
+		
+		<h4>Suspended Order: </h4>
+		<table>
+		<tr><th>Data</th> <th>Time</th> <th>Amount</th> <th>Start Date</th> <th>Package Name</th> <th>Username</th> <th>Validity Month</th></tr>
+		<tr th:each="o:${suspended_order}">
+			<td th:text="${#dates.format(o.date, 'dd-MM-yyyy')}" ></td>
+			<td th:text="${o.time}"></td>
+			<td th:text="${o.amount}"></td>
+			<td th:text="${#dates.format(o.getStartDate(), 'dd-MM-yyyy')}" ></td>
+			<td th:text="${o.name}"></td>
+			<td th:text="${o.username}"></td>
+			<td th:text="${o.month}"></td>
+		</tr>
+		</table>
+	</div>
+	
+	
+	
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Home</title>
+<style>
+.topright {
+  position: absolute;
+  top: 60px;
+  right: 16px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+	<h1 align="center">Welcome to telco services</h1>
+	<div class="topright">	
+		<div th:if="${session.user==null}">
+			<a href="/TelcoWEB/index.html">Login</a>
+			<a href="/TelcoWEB/Registration.html">Registration</a>
+			<a th:href="@{/GoToBuyPage}">BUY PACKAGE</a>
+			
+		</div>
+		<div th:if="${session.user!=null}">
+			<h3 th:text="${session.user.getUsername()}"></h3>
+			<a th:href="@{/Logout}">Logout</a><br>
+			<a th:href="@{/GoToBuyPage}">BUY PACKAGE</a>
+			
+			<h4>Rejected Order</h4>
+			<form action="UpdateOrder" method="POST" th:each="o:${orders}" >
+				<label th:text="${o.getDate() +' '+ o.getTime()+' '+ o.getPackage().getName()}"></label> <input type="hidden" name="order" th:value="${o.getId()}"></input>
+				<input type="submit" value="update"> <br>
+			</form>
+			<h4>Activattion Schedules</h4>
+			<table th:if="${schedules!=null}">
+				<tr><th>Date Activation</th> <th>Date Deactivation</th> <th>Services</th> <th>Optional Product</th></tr>
+				<tr th:each="as:${schedules}">
+					<td th:text="${#dates.format(as.getDateActivation(), 'yyyy-MM-dd')}"></td>
+					<td th:text="${#dates.format(as.getDateDeactivation(), 'yyyy-MM-dd')}"></td>
+					<td>
+						<div th:each="s:${as.services}">
+								<p  th:if="${s.type=='mp'}"> Mobile Phone:</p>
+								<ul th:if="${s.type=='mp'}">
+									<li th:text="${'minutes: ' + s.getMP().getMinutes()}"></li>
+									<li th:text="${'fee extra minutes: ' + s.getMP().getFee_minutes()}"></li>
+									<li th:text="${'sms: ' + s.getMP().getSms()}"></li>
+									<li th:text="${'fee extra minutes: ' + s.getMP().getFee_sms()}"></li>
+								</ul>
+								<p th:if="${s.type=='tp'}">Telephone Phone</p>
+								
+								<p  th:if="${s.type=='mi'}"> Mobile Internet:</p>
+								<ul th:if="${s.type=='mi'}">
+									<li th:text="${'giga: ' + s.getMI().getGiga()}"></li>
+									<li th:text="${'fee extra giga: ' + s.getMI().getGiga_fee()}"></li>
+								</ul>
+								
+								<p  th:if="${s.type=='ti'}"> Telephone Internet:</p>
+								
+								<ul th:if="${s.type=='ti'}">
+									<li th:text="${'giga: ' + s.getTI().getGiga()}"></li>
+									<li th:text="${'fee extra giga: ' + s.getTI().getGiga_fee()}"></li>
+								</ul>
+						</div>
+					</td>
+					<td>
+						<div th:each="op:${as.products}">
+							<b>Name: </b> <label th:text="${op.getName()}"></label> <br>
+							<b>Monthly Fee: </b> <label th:text="${op.getMonthly_fee()}"></label>			
+						</div>
+					</td>
+				</tr>
+				</table>
+		</div> 
+	</div>
+	<div align="left" th:each="p : ${packages}">
+		<h3 th:text="${p.name}"></h3>
+		<p>Services: </p>
+		<table>
+		<tr th:each="s:${p.services}">
+			<td th:if="${s.type=='mp'}">Mobile Phone: </td>
+			<td th:if="${s.type=='mi'}">Mobile Internet: </td>
+			<td th:if="${s.type=='ti'}"> Telephone Internet: </td>
+			<td th:if="${s.type=='tp'}">Telephone Phone: </td>
+			<td th:if="${s.type=='mp'}">
+			<ul>
+				<li th:text="${'minutes: ' + s.getMP().getMinutes()}"></li>
+				<li th:text="${'fee extra minutes: ' + s.getMP().getFee_minutes()}"></li>
+				<li th:text="${'sms: ' + s.getMP().getSms()}"></li>
+				<li th:text="${'fee extra minutes: ' + s.getMP().getFee_sms()}"></li>
+			</ul>
+			</td>
+			<td th:if="${s.type=='mi'}" >
+			<ul>
+				<li th:text="${'giga: ' + s.getMI().getGiga()}"></li>
+				<li th:text="${'fee extra giga: ' + s.getMI().getGiga_fee()}"></li>
+			</ul>
+			</td>
+			<td th:if="${s.type=='ti'}">
+			<ul>
+				<li th:text="${'giga: ' + s.getTI().getGiga()}"></li>
+				<li th:text="${'fee extra giga: ' + s.getTI().getGiga_fee()}"></li>
+			</ul>
+			</td>
+		</tr>
+		</table>
+	
+		<p>Optional Products: </p>
+		<div th:each="op:${p.products}">
+			<p>
+				<b>Name: </b> <label th:text="${op.getName()}"></label> <br>
+				<b>Monthly Fee: </b> <label th:text="${op.getMonthly_fee()}"></label>			</p>
+		</div>
+		
+		<p>Validities: </p>
+		<div th:each="v:${p.validities}">
+			<b>Month: </b> <label th:text="${v.getMonth()}"></label>
+			<b>Monthly Fee: </b> <label th:text="${v.getMonthly_fee()}"></label>		</div>
+	</div>
+	
+	
+	
+</body>
+</html>
